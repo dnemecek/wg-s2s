@@ -71,6 +71,11 @@ UCG je initiator (`PersistentKeepalive = 25`), pfSense listener.
 přes tunel přicházet pakety (další LAN, OpenVPN pool, jiné S2S sítě). Při přidání
 sítě uprav `AllowedIPs` na UCG i peer na pfSense, routing a firewall.
 
+## Dokumentace
+
+- [docs/runbook.md](docs/runbook.md): zprovoznění tunelu krok za krokem, konfigurace pfSense, AllowedIPs, troubleshooting
+- [docs/release.md](docs/release.md): jak dělat změny a nasazovat novou verzi
+
 ## Licence
 
 MIT, viz `LICENSE`.
