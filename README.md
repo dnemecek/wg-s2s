@@ -16,6 +16,7 @@ NAT nepřidává a původní source IP prochází.
 | `wg-s2s.sh` | správa tunelů (`new`, `start`, `stop`, `restart`, `status`, `delete`, `list`) |
 | `wg-s2s@.service` | systemd šablona pro autostart tunelu (`wg-s2s@<nazev>`) |
 | `install.sh` | instalace na UCG do `/root/wg-s2s/` + symlink `/usr/local/bin/wg-s2s` |
+| `deploy.sh` | z pracovní stanice: scp souborů na UCG a spuštění `install.sh` |
 
 ## Požadavky
 
@@ -24,11 +25,21 @@ NAT nepřidává a původní source IP prochází.
 
 ## Instalace
 
+Z pracovní stanice jedním příkazem (vyžaduje SSH klíč pro root na UCG):
+
+```bash
+./deploy.sh <ucg-ip>
+```
+
+Ručně:
+
 ```bash
 scp wg-s2s.sh wg-s2s@.service install.sh root@<ucg>:/root/
-ssh root@<ucg>
-cd /root && ./install.sh
+ssh root@<ucg> 'cd /root && ./install.sh'
 ```
+
+Opakované nasazení přepíše skript a systemd unit, existující tunely nechá.
+Po změně `wg-s2s.sh` restartuj tunely: `wg-s2s restart all`.
 
 ## Použití
 
@@ -59,6 +70,11 @@ UCG je initiator (`PersistentKeepalive = 25`), pfSense listener.
 `AllowedIPs` na obou stranách musí obsahovat všechny subnety, ze kterých mohou
 přes tunel přicházet pakety (další LAN, OpenVPN pool, jiné S2S sítě). Při přidání
 sítě uprav `AllowedIPs` na UCG i peer na pfSense, routing a firewall.
+
+## Dokumentace
+
+- [docs/runbook.md](docs/runbook.md): zprovoznění tunelu krok za krokem, konfigurace pfSense, AllowedIPs, troubleshooting
+- [docs/release.md](docs/release.md): jak dělat změny a nasazovat novou verzi
 
 ## Licence
 
