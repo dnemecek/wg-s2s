@@ -16,6 +16,7 @@ NAT nepřidává a původní source IP prochází.
 | `wg-s2s.sh` | správa tunelů (`new`, `start`, `stop`, `restart`, `status`, `delete`, `list`) |
 | `wg-s2s@.service` | systemd šablona pro autostart tunelu (`wg-s2s@<nazev>`) |
 | `install.sh` | instalace na UCG do `/root/wg-s2s/` + symlink `/usr/local/bin/wg-s2s` |
+| `deploy.sh` | z pracovní stanice: scp souborů na UCG a spuštění `install.sh` |
 
 ## Požadavky
 
@@ -24,11 +25,21 @@ NAT nepřidává a původní source IP prochází.
 
 ## Instalace
 
+Z pracovní stanice jedním příkazem (vyžaduje SSH klíč pro root na UCG):
+
+```bash
+./deploy.sh <ucg-ip>
+```
+
+Ručně:
+
 ```bash
 scp wg-s2s.sh wg-s2s@.service install.sh root@<ucg>:/root/
-ssh root@<ucg>
-cd /root && ./install.sh
+ssh root@<ucg> 'cd /root && ./install.sh'
 ```
+
+Opakované nasazení přepíše skript a systemd unit, existující tunely nechá.
+Po změně `wg-s2s.sh` restartuj tunely: `wg-s2s restart all`.
 
 ## Použití
 
