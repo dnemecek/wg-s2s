@@ -1,0 +1,25 @@
+# ============================================================================
+# WireGuard S2S systemd template
+# ============================================================================
+# Umisteni:  /etc/systemd/system/wg-s2s@.service
+# Pouziti:   systemctl start wg-s2s@brandys
+#            systemctl enable wg-s2s@viktor
+#
+# %i = nazev tunelu (brandys, viktor, ...)
+#
+# David Nemecek | NC | 2026
+# ============================================================================
+
+[Unit]
+Description=WireGuard S2S Tunnel (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/wg-quick up /root/wg-s2s/tunnels/%i.conf
+ExecStop=/usr/bin/wg-quick down /root/wg-s2s/tunnels/%i.conf
+
+[Install]
+WantedBy=multi-user.target
