@@ -1,4 +1,7 @@
-# TODO
+# Roadmap
 
-- [ ] Zapracovat nálezy z revize kódu 2026-09-20: start/stop přes systemctl, validace názvu tunelu, --psk-file, install.sh relativně k sobě, mrtvý kód tunnel_net, version příkaz
-- [ ] Ověřit, zda `/root` a `/etc/systemd/system` přežijí upgrade firmware UCG
+- [ ] `start`/`stop` přes `systemctl`, pokud existuje unit `wg-s2s@<nazev>`, aby stav systemd a skriptu nedivergoval
+- [ ] Validace názvu tunelu (max 15 znaků, jen `[A-Za-z0-9_-]`), název je zároveň jméno interface
+- [ ] `--psk-file` jako alternativa k `--psk` v argumentu
+- [ ] Příkaz `wg-s2s version`
+- [ ] Ověřit chování po upgradu firmware UCG (přežití `/root/wg-s2s` a systemd unit)
