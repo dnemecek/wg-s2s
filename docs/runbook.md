@@ -18,6 +18,12 @@ subnet je /29, pfSense drží .1, každá UCG dostane vlastní adresu v rozsahu.
 
 ## 1. Instalace skriptu na UCG
 
+Přímo na UCG (SSH jako root):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dnemecek/wg-s2s/main/install.sh | bash
+```
+
 Z pracovní stanice:
 
 ```bash
