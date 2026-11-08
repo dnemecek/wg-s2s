@@ -15,7 +15,7 @@ NAT nepřidává a původní source IP prochází.
 |---|---|
 | `wg-s2s.sh` | správa tunelů (`new`, `start`, `stop`, `restart`, `status`, `delete`, `list`) |
 | `wg-s2s@.service` | systemd šablona pro autostart tunelu (`wg-s2s@<nazev>`) |
-| `install.sh` | instalace na UCG do `/root/wg-s2s/` + symlink `/usr/local/bin/wg-s2s` |
+| `install.sh` | instalace na UCG do `/root/wg-s2s/` + symlink `/usr/local/bin/wg-s2s`; přes `curl \| bash` si soubory stáhne z GitHubu sám |
 | `deploy.sh` | z pracovní stanice: scp souborů na UCG a spuštění `install.sh` |
 
 ## Požadavky
@@ -25,7 +25,16 @@ NAT nepřidává a původní source IP prochází.
 
 ## Instalace
 
-Z pracovní stanice jedním příkazem (vyžaduje SSH klíč pro root na UCG):
+Přímo na UCG (SSH jako root) jedním příkazem:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dnemecek/wg-s2s/main/install.sh | bash
+```
+
+Jinou větev nebo tag než `main` zadej v URL i v proměnné `WG_S2S_REF`, například
+`curl -fsSL https://raw.githubusercontent.com/dnemecek/wg-s2s/v1.1.0/install.sh | WG_S2S_REF=v1.1.0 bash`.
+
+Z pracovní stanice (vyžaduje SSH klíč pro root na UCG):
 
 ```bash
 ./deploy.sh <ucg-ip>

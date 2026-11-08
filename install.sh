@@ -3,6 +3,7 @@
 # WireGuard S2S - Instalace
 # ============================================================================
 # Pouziti: ./install.sh
+#          curl -fsSL https://raw.githubusercontent.com/dnemecek/wg-s2s/main/install.sh | bash
 #
 # David Nemecek | NC | 2026
 # ============================================================================
@@ -33,6 +34,22 @@ if ! command -v wg &>/dev/null; then
 fi
 echo "[OK] wireguard-tools installed ($(wg --version))"
 
+# Zdroj souboru k instalaci. Pri spusteni pres "curl ... | bash" skript nelezi
+# na disku (BASH_SOURCE neni soubor) a wg-s2s.sh ani unit vedle nej nejsou,
+# proto je stahneme z GitHubu. Vychozi vetev main, jinou vetev nebo tag
+# lze zadat promennou WG_S2S_REF.
+SRC_DIR="."
+if [[ ! -f "${BASH_SOURCE[0]:-}" ]]; then
+    SRC_DIR="$(mktemp -d)"
+    trap 'rm -rf "$SRC_DIR"' EXIT
+    URL="https://raw.githubusercontent.com/dnemecek/wg-s2s/${WG_S2S_REF:-main}"
+    echo ""
+    echo "[DOWNLOAD] ${URL}"
+    curl -fsSL -o "${SRC_DIR}/wg-s2s.sh" "${URL}/wg-s2s.sh"
+    curl -fsSL -o "${SRC_DIR}/wg-s2s@.service" "${URL}/wg-s2s@.service"
+    echo "[OK] wg-s2s.sh, wg-s2s@.service"
+fi
+
 # Vytvoreni adresaru
 echo ""
 echo "[INSTALL] Creating directories..."
@@ -43,7 +60,7 @@ echo "[OK] /root/wg-s2s/"
 
 # Kopirovani skriptu
 echo "[INSTALL] Installing wg-s2s.sh..."
-cp wg-s2s.sh /root/wg-s2s/wg-s2s.sh
+cp "${SRC_DIR}/wg-s2s.sh" /root/wg-s2s/wg-s2s.sh
 chmod 700 /root/wg-s2s/wg-s2s.sh
 ln -sf /root/wg-s2s/wg-s2s.sh /usr/local/bin/wg-s2s
 echo "[OK] /root/wg-s2s/wg-s2s.sh"
@@ -51,7 +68,7 @@ echo "[OK] /usr/local/bin/wg-s2s (symlink)"
 
 # Systemd template
 echo "[INSTALL] Installing systemd template..."
-cp wg-s2s@.service /etc/systemd/system/wg-s2s@.service
+cp "${SRC_DIR}/wg-s2s@.service" /etc/systemd/system/wg-s2s@.service
 systemctl daemon-reload
 echo "[OK] /etc/systemd/system/wg-s2s@.service"
 
